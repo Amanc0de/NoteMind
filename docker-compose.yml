@@ -1,0 +1,35 @@
+services:
+
+  web:
+    build: .
+    container_name: notemind_web
+    ports:
+      - "8501:8501"
+    environment:
+      - DATABASE_URL=postgresql://notemind_user:notemind_pass@db:5432/notemind_db
+    env_file:
+      - .env
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    image: postgres:16
+    container_name: notemind_db
+    restart: always
+    environment:
+      POSTGRES_USER: notemind_user
+      POSTGRES_PASSWORD: notemind_pass
+      POSTGRES_DB: notemind_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U notemind_user -d notemind_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_data:
