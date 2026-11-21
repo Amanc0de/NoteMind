@@ -1,6 +1,7 @@
-﻿streamlit
+﻿
+streamlit
 pypdf
-sentence-transformers
+fastembed
 faiss-cpu
 numpy
 python-dotenv
